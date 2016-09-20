@@ -117,34 +117,18 @@ $(document).ready(function () {
 
 <h1 class="title toc-ignore">analysis_Arnoud.R</h1>
 <h4 class="author"><em>u1236118</em></h4>
-<h4 class="date"><em>Mon Sep 19 16:59:59 2016</em></h4>
+<h4 class="date"><em>Tue Sep 20 09:18:38 2016</em></h4>
 
 </div>
 
 
-<pre class="r"><code>require(dplyr)</code></pre>
-<pre><code>## Loading required package: dplyr</code></pre>
-<pre><code>## 
-## Attaching package: 'dplyr'</code></pre>
-<pre><code>## The following objects are masked from 'package:stats':
-## 
-##     filter, lag</code></pre>
-<pre><code>## The following objects are masked from 'package:base':
-## 
-##     intersect, setdiff, setequal, union</code></pre>
-<pre class="r"><code>require(cowplot)</code></pre>
-<pre><code>## Loading required package: cowplot</code></pre>
-<pre><code>## Loading required package: ggplot2</code></pre>
-<pre><code>## 
-## Attaching package: 'cowplot'</code></pre>
-<pre><code>## The following object is masked from 'package:ggplot2':
-## 
-##     ggsave</code></pre>
-<pre class="r"><code>require(ggthemes)</code></pre>
-<pre><code>## Loading required package: ggthemes</code></pre>
-<pre class="r"><code>require(coefplot)</code></pre>
-<pre><code>## Loading required package: coefplot</code></pre>
-<pre class="r"><code># Prepare data ----------------------------------------------------------------------
+<pre class="r"><code>require(dplyr, warn.conflicts=F, quietly=T)
+require(cowplot, warn.conflicts=F, quietly=T)
+require(ggthemes, warn.conflicts=F, quietly=T)
+require(coefplot, warn.conflicts=F, quietly=T)
+
+
+# Prepare data ----------------------------------------------------------------------
 
 # Read data
 dat &lt;- read.csv(&quot;spotify.csv&quot;, sep=&quot;;&quot;)

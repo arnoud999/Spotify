@@ -1,7 +1,7 @@
-require(dplyr)
-require(cowplot)
-require(ggthemes)
-require(coefplot)
+require(dplyr, warn.conflicts=F, quietly=T)
+require(cowplot, warn.conflicts=F, quietly=T)
+require(ggthemes, warn.conflicts=F, quietly=T)
+require(coefplot, warn.conflicts=F, quietly=T)
 
 
 # Prepare data ----------------------------------------------------------------------
