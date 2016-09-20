@@ -1,3 +1,5 @@
+# Analyze top 200 charts in Spotify
+
 require(dplyr, warn.conflicts=F, quietly=T)
 require(cowplot, warn.conflicts=F, quietly=T)
 require(ggthemes, warn.conflicts=F, quietly=T)
