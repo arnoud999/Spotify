@@ -2,6 +2,9 @@ require(dplyr, warn.conflicts=F, quietly=T)
 require(cowplot, warn.conflicts=F, quietly=T)
 require(ggthemes, warn.conflicts=F, quietly=T)
 require(coefplot, warn.conflicts=F, quietly=T)
+require(corrgram, warn.conflicts=F, quietly=T)
+require(gridExtra, warn.conflicts=F, quietly=T)
+require(tidyr, warn.conflicts=F, quietly=T)
 
 
 # Prepare data ----------------------------------------------------------------------
@@ -55,13 +58,6 @@ ggplot(dat, aes(x=rank, y=streams)) + geom_smooth()
 dat %>% filter(streams==max_streams) %>% select(id, title, artist)
 dat %>% filter(streams==min_streams) %>% select(id, title, artist)
 
-# Plot danceability over time
-p <- ggplot(dat, aes(x=date, y=danceability)) + geom_smooth() 
-# p + geom_rect(aes(xmin=as.Date("2015-12-24"), xmax=as.Date("2015-12-25"), 
-#                 ymin = -Inf, ymax = Inf)) + 
-#   geom_text(aes(x=as.Date("2016-02-01"), y=.67), label="Christmas") +
-#   coord_cartesian(ylim = c(.6, .68))
-
 # Find least and most danceable tracks among the top 10
 tmp <- filter(dat, rank<11) %>% group_by(id) 
 tmp <- filter(songs, minrank<11)
@@ -73,6 +69,19 @@ cor.test(songs$danceability, log(songs$totalstreams))
 ggplot(songs, aes(danceability, log(totalstreams))) + geom_point() + geom_smooth()
 # Curvilinear effect?
 ggplot(songs, aes(danceability, log(totalstreams))) + geom_smooth()
+
+# Features ----------------------------------------------------------------
+
+# Correlation between the features
+corrgram(select(features, -id), upper.panel = panel.pie,
+         lower.panel=panel.conf, cex.labels = 1.1)
+
+# Plot all features over time
+datlong <- gather(dat, "feature", "value", energy:danceability)
+plotfeature <- function(dat, group) ggplot(dat, aes(x=date, y=value)) +
+  geom_smooth() + ggtitle(group)
+allplots = datlong %>% group_by(feature) %>% do(plots = plotfeature(., unique(.$feature)))
+do.call("grid.arrange", c(allplots$plots, ncol=3))
 
 # Analysis --------------------------------------------------------------------------
 
