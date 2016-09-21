@@ -86,10 +86,17 @@ allplots = datlong %>% group_by(feature) %>% do(plots = plotfeature(., unique(.$
 do.call("grid.arrange", c(allplots$plots, ncol=3))
 
 # Features and totalstreams 
-pltfeature_streams <- function(dat, group) ggplot(dat, aes(value, totalstreams) +
+songslong <- gather(songs, "feature", "value", energy:danceability)
+pltfeature_streams <- function(dat, group) ggplot(dat, aes(value, totalstreams)) +
 	geom_smooth() + ggtitle(group)
-feature_streams = datlong %>% group_by(feature) %>% do(plots = pltfeature_streams(., unique(.$feature)))
+feature_streams = songslong %>% group_by(feature) %>% do(plots = pltfeature_streams(., unique(.$feature)))
 do.call("grid.arrange", c(feature_streams$plots, ncol=3))
+
+# 3rd polynomial effect of tempo?
+  # Local maximum at 106.94 BPM, although the mean is 119.50 BPM
+lm(totalstreams ~ value, filter(songslong, feature=="tempo")) %>% summary()
+ggplot(filter(songslong, feature=="tempo"), aes(x=value, y=totalstreams)) +
+  geom_smooth(formula = y ~ poly(x, 3))  
 
 # Analysis --------------------------------------------------------------------------
 
