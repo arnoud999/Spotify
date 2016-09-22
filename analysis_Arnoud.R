@@ -89,7 +89,8 @@ do.call("grid.arrange", c(allplots$plots, ncol=3))
 songslong <- gather(songs, "feature", "value", energy:danceability)
 pltfeature_streams <- function(dat, group) ggplot(dat, aes(value, totalstreams)) +
 	geom_smooth() + ggtitle(group)
-feature_streams = songslong %>% group_by(feature) %>% do(plots = pltfeature_streams(., unique(.$feature)))
+feature_streams = songslong %>% group_by(feature) %>% 
+  do(plots = pltfeature_streams(., unique(.$feature)))
 do.call("grid.arrange", c(feature_streams$plots, ncol=3))
 
 # 3rd polynomial effect of tempo?
@@ -97,6 +98,34 @@ do.call("grid.arrange", c(feature_streams$plots, ncol=3))
 lm(totalstreams ~ value, filter(songslong, feature=="tempo")) %>% summary()
 ggplot(filter(songslong, feature=="tempo"), aes(x=value, y=totalstreams)) +
   geom_smooth(formula = y ~ poly(x, 3))  
+
+# Features and times in top 200
+pltfeature_top200 <- function(dat, group) ggplot(dat, aes(value, timesintop200)) +
+  geom_smooth() + ggtitle(group)
+feature_top200 = songslong %>% group_by(feature) %>% 
+  do(plots = pltfeature_top200(., unique(.$feature)))
+do.call("grid.arrange", c(feature_top200$plots, ncol=3))
+
+# Duration ----------------------------------------------------------------
+
+# Plot duration and log(totalstreams)
+ggplot(songs, aes(duration, log(totalstreams))) + 
+  geom_smooth() + geom_point(alpha=.3)
+
+# Optimal duration?
+# songs %>% filter(duration<750) %>% 
+#   ggplot(aes(duration, log(totalstreams))) + 
+#   geom_smooth(method="lm", formula = y ~ poly(x,3)) + geom_point(alpha=.3)
+# lmdur <- songs %>% filter(duration<750) %>% 
+#   lm(log(totalstreams) ~ poly(duration, 3), .)
+# max(predict(lmdur, data.frame(duration=seq(180, 230))))
+# data.frame(duration=seq(180, 230)) %>%
+#   mutate(streams=predict(lmdur, data.frame(duration)))
+
+# Shortest and longest song?
+songs %>% filter(duration == max(songs$duration) | 
+                   duration == min(songs$duration)) %>% 
+  select(artist, title, duration)
 
 # Analysis --------------------------------------------------------------------------
 
