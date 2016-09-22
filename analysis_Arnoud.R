@@ -109,23 +109,27 @@ do.call("grid.arrange", c(feature_top200$plots, ncol=3))
 # Duration ----------------------------------------------------------------
 
 # Plot duration and log(totalstreams)
-ggplot(songs, aes(duration, log(totalstreams))) + 
+songs %>% filter(duration<750) %>%
+  ggplot(., aes(duration, log(totalstreams))) + 
   geom_smooth() + geom_point(alpha=.3)
 
 # Optimal duration?
-# songs %>% filter(duration<750) %>% 
-#   ggplot(aes(duration, log(totalstreams))) + 
-#   geom_smooth(method="lm", formula = y ~ poly(x,3)) + geom_point(alpha=.3)
-# lmdur <- songs %>% filter(duration<750) %>% 
-#   lm(log(totalstreams) ~ poly(duration, 3), .)
-# max(predict(lmdur, data.frame(duration=seq(180, 230))))
-# data.frame(duration=seq(180, 230)) %>%
-#   mutate(streams=predict(lmdur, data.frame(duration)))
+songs %>% filter(duration<750) %>%
+  ggplot(aes(duration, log(totalstreams))) +
+  geom_smooth(method="lm", formula = y ~ poly(x,3)) + geom_point(alpha=.3)
+lmdur <- songs %>% filter(duration<750) %>%
+  lm(totalstreams ~ poly(duration, 3), .)
+# Find the maximum predicted totalstreams
+duration=seq(180, 230, .01)
+tmp <- data.frame(duration, 
+                  pred=predict(lmdur, data.frame(duration), interval="confidence"))
+tmp %>% filter(pred.fit==max(tmp$pred.fit))
 
 # Shortest and longest song?
 songs %>% filter(duration == max(songs$duration) | 
                    duration == min(songs$duration)) %>% 
-  select(artist, title, duration)
+  select(artist, title, duration) %>%
+  mutate(durationm = duration/60)
 
 # Analysis --------------------------------------------------------------------------
 
