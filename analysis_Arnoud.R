@@ -1,12 +1,7 @@
 # Analyze top 200 charts in Spotify
 
-require(dplyr, warn.conflicts=F, quietly=T)
-require(cowplot, warn.conflicts=F, quietly=T)
-require(ggthemes, warn.conflicts=F, quietly=T)
-require(coefplot, warn.conflicts=F, quietly=T)
-require(corrgram, warn.conflicts=F, quietly=T)
-require(gridExtra, warn.conflicts=F, quietly=T)
-require(tidyr, warn.conflicts=F, quietly=T)
+library(pacman)
+p_load(dplyr, cowplot, ggthemes, coefplot, corrgram, gridExtra, tidyr)
 
 
 # Prepare data ----------------------------------------------------------------------
